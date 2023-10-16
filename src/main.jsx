@@ -10,6 +10,8 @@ import AddCoffee from './components/AddCoffee.jsx';
 import UpdateCoffee from './components/UpdateCoffee.jsx';
 import SignUp from './signUp/SignUp.jsx';
 import SignIn from './signIn/SignIn.jsx';
+import AuthProviders from './providers/AuthProviders.jsx';
+import Users from './users/Users.jsx';
 
 const router = createBrowserRouter([
   {
@@ -22,22 +24,29 @@ const router = createBrowserRouter([
     element: <AddCoffee></AddCoffee>
   },
   {
-    path:'updateCoffee/:id',
+    path: 'updateCoffee/:id',
     element: <UpdateCoffee></UpdateCoffee>,
-    loader: ({params}) => fetch(`http://localhost:5000/coffee/${params.id}`)
-  }, 
+    loader: ({ params }) => fetch(`http://localhost:5000/coffee/${params.id}`)
+  },
   {
-    path: '/signup', 
+    path: '/signup',
     element: <SignUp></SignUp>
+  },
+  {
+    path: '/signin',
+    element: <SignIn></SignIn>
   }, 
   {
-    path: '/signin', 
-    element: <SignIn></SignIn>
+    path: '/users', 
+    element: <Users></Users>, 
+    loader: () => fetch('http://localhost:5000/user')
   }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-  <RouterProvider router={router} />
+    <AuthProviders>
+      <RouterProvider router={router} />
+    </AuthProviders>
   </React.StrictMode>,
 )
