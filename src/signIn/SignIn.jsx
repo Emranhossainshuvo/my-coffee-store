@@ -4,7 +4,7 @@ import { AuthContext } from "../providers/AuthProviders";
 
 const SignIn = () => {
 
-    const { signInUser } = useContext(AuthContext) 
+    const { signInUser } = useContext(AuthContext)
 
     const handleSignIn = e => {
         e.preventDefault();
@@ -12,12 +12,27 @@ const SignIn = () => {
         const email = form.email.value;
         const password = form.password.value;
         signInUser(email, password)
-        .then(result => {
-            console.log(result);
-        })
-        .catch(error => {
-            console.error(error)
-        })
+            .then(result => {
+                console.log(result);
+                const user = {
+                    email,
+                    lastLoggedAt: result.user?.metadata?.lastSignInTime
+                }
+                fetch('https://coffee-store-server-k3uttplr8-shuvos-projects-7bea5cfb.vercel.app/user', {
+                    method: 'PATCH',
+                    headers: {
+                        'content-type': 'application/json'
+                    },
+                    body: JSON.stringify(user)
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        console.log(data);
+                    })
+            })
+            .catch(error => {
+                console.error(error)
+            })
     }
 
     return (
